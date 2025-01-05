@@ -2,16 +2,20 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
 
-SQLALCHEMY_DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://localhost/ecoprint_db"
-)
+# For Vercel serverless environment, use /tmp directory
+if os.environ.get("VERCEL"):
+    SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/ecoprint.db"
+else:
+    # Local development
+    SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./ecoprint.db")
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# Create engine with SQLite configuration
+connect_args = {"check_same_thread": False} if SQLALCHEMY_DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=connect_args)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
-    """Get a database session."""
     db = SessionLocal()
     try:
         yield db
