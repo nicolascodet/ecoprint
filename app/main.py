@@ -1,7 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from .api import endpoints
+from .db.init_db import init_db
 
-app = FastAPI()
+app = FastAPI(
+    title="EcoPrint API",
+    description="API for tracking eco-friendly transportation activities",
+    version="1.0.0"
+)
+
+# Initialize database
+init_db()
 
 # Configure CORS
 app.add_middleware(
@@ -14,8 +24,8 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    """Redirect to API documentation."""
+    return RedirectResponse(url="/docs")
 
-@app.get("/api/test")
-async def test():
-    return {"message": "API is working!"}
+# Include routers
+app.include_router(endpoints.router, prefix="/api")
