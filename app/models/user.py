@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, ARRAY
+from sqlalchemy import Column, Integer, String, Float, Boolean, JSON
 from sqlalchemy.orm import relationship
 from ..db.base_class import Base
 
@@ -13,8 +13,8 @@ class User(Base):
     total_co2_saved = Column(Float, default=0.0)
     current_streak = Column(Integer, default=0)
     points = Column(Integer, default=0)
-    achievements = Column(ARRAY(String), default=[])
-    synced_activities = Column(ARRAY(String), default=[])
+    achievements = Column(JSON, default=list)
+    synced_activities = Column(JSON, default=list)
     
     # Strava integration
     strava_connected = Column(Boolean, default=False)
