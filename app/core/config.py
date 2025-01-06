@@ -20,9 +20,11 @@ class Settings(BaseSettings):
     STRAVA_CLIENT_ID: Optional[str] = None
     STRAVA_CLIENT_SECRET: Optional[str] = None
     STRAVA_WEBHOOK_VERIFY_TOKEN: Optional[str] = None
+    STRAVA_REDIRECT_URI: Optional[str] = None
     
     class Config:
         env_file = ".env"
+        extra = "allow"  # Allow extra fields to be passed
 
 @lru_cache()
 def get_settings() -> Settings:
